@@ -3,9 +3,11 @@ import APIKit from "../../spotify";
 import "../styles/library.css";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { IconContext } from "react-icons";
+import { useNavigate } from "react-router-dom";
 
 export const Library = () => {
   const [playlists, setPlaylist] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     APIKit.get("me/playlists").then(function (response) {
@@ -14,11 +16,20 @@ export const Library = () => {
       console.log(playlists);
     });
   }, []);
+
+  const playPlaylist = (id) => {
+    navigate("/player", { state: { id: id } });
+  };
+
   return (
     <div className="screen-container">
       <div className="library-body">
         {playlists?.map((song) => (
-          <div className="play-list-card" key={song.name}>
+          <div
+            className="play-list-card"
+            key={song.id}
+            onClick={() => playPlaylist(song.id)}
+          >
             <img
               src={song.images[0].url}
               alt="playlist-img"
